@@ -15,5 +15,12 @@
       <guid>https://alexanderWangzz.github.io/storage-information/posts/test-post/</guid>
       <description>&lt;p&gt;这是我的第一篇博客！‘&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>Test Post</title>
+      <link>https://alexanderWangzz.github.io/storage-information/posts/test-post2/</link>
+      <pubDate>Mon, 11 Nov 2024 12:00:00 +0800</pubDate>
+      <guid>https://alexanderWangzz.github.io/storage-information/posts/test-post2/</guid>
+      <description>&lt;p&gt;This is a test post for verifying Hugo deployment.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>
