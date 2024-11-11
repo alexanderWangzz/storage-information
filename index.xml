@@ -6,8 +6,72 @@
     <description>Recent content on Alexander&#39;s Blog</description>
     <generator>Hugo -- 0.138.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Nov 2024 17:25:38 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 Nov 2024 20:56:59 +0800</lastBuildDate>
     <atom:link href="https://alexanderWangzz.github.io/storage-information/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RAID_study</title>
+      <link>https://alexanderWangzz.github.io/storage-information/posts/raid_study/</link>
+      <pubDate>Mon, 11 Nov 2024 20:56:59 +0800</pubDate>
+      <guid>https://alexanderWangzz.github.io/storage-information/posts/raid_study/</guid>
+      <description>&lt;h1 id=&#34;raid学习&#34;&gt;&lt;strong&gt;RAID学习&lt;/strong&gt;&lt;/h1&gt;
+&lt;h2 id=&#34;raid-0&#34;&gt;RAID-0&lt;/h2&gt;
+&lt;h2 id=&#34;raid-1&#34;&gt;RAID-1&lt;/h2&gt;
+&lt;h2 id=&#34;raid-2&#34;&gt;RAID-2&lt;/h2&gt;
+&lt;h2 id=&#34;raid-5&#34;&gt;RAID-5&lt;/h2&gt;
+&lt;p&gt;写合并情况：&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;1731330505661&#34; loading=&#34;lazy&#34; src=&#34;image/RAID_study/1731330505661.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;小写的过程需要RMW，同时不仅需要读写18号数据块，同时也需要读写校验块p。&lt;/p&gt;
+&lt;p&gt;小写请求的处理步骤通常是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;读取旧数据块和校验块&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;根据新数据计算新的校验块&lt;/strong&gt; 。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;写入新数据块和新的校验块&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt=&#34;1731330043139&#34; loading=&#34;lazy&#34; src=&#34;image/RAID_study/1731330043139.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;1731330967637&#34; loading=&#34;lazy&#34; src=&#34;image/RAID_study/1731330967637.png&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;异常状态的风险&#34;&gt;&lt;strong&gt;异常状态的风险&lt;/strong&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;如果系统在步骤 3（写入新数据和校验块）时突然掉电：
+&lt;ul&gt;
+&lt;li&gt;数据块可能已经写入，但校验块未写入。&lt;/li&gt;
+&lt;li&gt;或校验块写入完成，但数据块未写入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;结果是，条带中的数据和校验块不一致，称为  &lt;strong&gt;条带不一致（Stripe Inconsistency）&lt;/strong&gt; 。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在这种情况下(小写请求)，如果稍后发生磁盘故障，系统将无法正确重建丢失的数据，从而导致数据丢失。&lt;/p&gt;
+&lt;h3 id=&#34;rcw机制&#34;&gt;RCW机制：&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;RCW（Read-Reconstruct-Write）&lt;/strong&gt; 是一种防止条带不一致的机制，适用于小写请求。在写入过程中，RCW 不仅依赖数据块和校验块的部分更新，还会重新构建整个条带，以确保数据和校验块的一致性&lt;/p&gt;
+&lt;h4 id=&#34;rcw-的具体流程&#34;&gt;&lt;strong&gt;RCW 的具体流程&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;假设写请求更新条带中的数据块 D1D1&lt;strong&gt;D&lt;/strong&gt;1 为 D1′D1&amp;rsquo;&lt;strong&gt;D&lt;/strong&gt;1**′**，RCW 机制处理流程如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;读取整个条带（Read Full Stripe）&lt;/strong&gt; :&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;包括所有数据块（如 D1,D2,D3D1, D2, D3&lt;strong&gt;D&lt;/strong&gt;1**,&lt;strong&gt;D&lt;/strong&gt;2**,&lt;strong&gt;D&lt;/strong&gt;3）和校验块（PP&lt;strong&gt;P&lt;/strong&gt;）。&lt;/li&gt;
+&lt;li&gt;确保内存中有条带的完整内容。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;重建校验块（Reconstruct Parity）&lt;/strong&gt; :&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;根据条带中的所有数据块（包括更新后的 D1′D1&amp;rsquo;&lt;strong&gt;D&lt;/strong&gt;1**′**）重新计算校验块 P′P&amp;rsquo;&lt;strong&gt;P&lt;/strong&gt;′。&lt;/p&gt;
+&lt;p&gt;3.&lt;strong&gt;写回条带（Write Full Stripe）&lt;/strong&gt; :&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将整个条带的内容（D1′,D2,D3,P′D1&amp;rsquo;, D2, D3, P&amp;rsquo;&lt;strong&gt;D&lt;/strong&gt;1**′&lt;strong&gt;,&lt;strong&gt;D&lt;/strong&gt;2&lt;/strong&gt;,&lt;strong&gt;D&lt;/strong&gt;3**,&lt;strong&gt;P&lt;/strong&gt;′）写回到磁盘，而不是仅更新部分数据块和校验块。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;rcw-的优点&#34;&gt;&lt;strong&gt;RCW 的优点&lt;/strong&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;一致性保障&lt;/strong&gt; ：条带内的数据和校验块始终保持一致，即使写入中途发生掉电，也能通过冗余数据恢复。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;数据可靠性&lt;/strong&gt; ：如果发生磁盘故障，仍然可以通过剩余数据块和校验块正确重建丢失的数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h4 id=&#34;为什么-rcw-机制是必要的&#34;&gt;&lt;strong&gt;为什么 RCW 机制是必要的？&lt;/strong&gt;&lt;/h4&gt;
+&lt;p&gt;在 RAID 5 中，小写请求容易导致以下问题：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>测试文字</title>
       <link>https://alexanderWangzz.github.io/storage-information/posts/test-post/</link>

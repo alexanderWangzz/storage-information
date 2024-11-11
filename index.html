@@ -129,6 +129,28 @@
 
 <article class="first-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">RAID_study
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>RAID学习 RAID-0 RAID-1 RAID-2 RAID-5 写合并情况：
+小写的过程需要RMW，同时不仅需要读写18号数据块，同时也需要读写校验块p。
+小写请求的处理步骤通常是：
+读取旧数据块和校验块 根据新数据计算新的校验块 。 写入新数据块和新的校验块 异常状态的风险 如果系统在步骤 3（写入新数据和校验块）时突然掉电： 数据块可能已经写入，但校验块未写入。 或校验块写入完成，但数据块未写入。 结果是，条带中的数据和校验块不一致，称为 条带不一致（Stripe Inconsistency） 。 在这种情况下(小写请求)，如果稍后发生磁盘故障，系统将无法正确重建丢失的数据，从而导致数据丢失。
+RCW机制： RCW（Read-Reconstruct-Write） 是一种防止条带不一致的机制，适用于小写请求。在写入过程中，RCW 不仅依赖数据块和校验块的部分更新，还会重新构建整个条带，以确保数据和校验块的一致性
+RCW 的具体流程 假设写请求更新条带中的数据块 D1D1D1 为 D1′D1’D1**′**，RCW 机制处理流程如下：
+读取整个条带（Read Full Stripe） : 包括所有数据块（如 D1,D2,D3D1, D2, D3D1**,D2**,D3）和校验块（PPP）。 确保内存中有条带的完整内容。 重建校验块（Reconstruct Parity） : 根据条带中的所有数据块（包括更新后的 D1′D1’D1**′**）重新计算校验块 P′P’P′。
+3.写回条带（Write Full Stripe） :
+将整个条带的内容（D1′,D2,D3,P′D1’, D2, D3, P’D1**′,D2,D3**,P′）写回到磁盘，而不是仅更新部分数据块和校验块。
+RCW 的优点 一致性保障 ：条带内的数据和校验块始终保持一致，即使写入中途发生掉电，也能通过冗余数据恢复。 数据可靠性 ：如果发生磁盘故障，仍然可以通过剩余数据块和校验块正确重建丢失的数据。 为什么 RCW 机制是必要的？ 在 RAID 5 中，小写请求容易导致以下问题：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-11-11 20:56:59 +0800 CST'>November 11, 2024</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;Alexander Wang</footer>
+  <a class="entry-link" aria-label="post link to RAID_study" href="https://alexanderWangzz.github.io/storage-information/posts/raid_study/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">测试文字
     </h2>
   </header>
