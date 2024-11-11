@@ -1,0 +1,16 @@
+baseURL = 'https://alexanderWangzz.github.io/storage-information/'
+languageCode = 'en-us'
+title = "Alexander's Blog"
+theme = 'PaperMod'
+
+[params]
+  author = "Alexander Wang"
+  description = "A blog about technology, coding, and personal insights."
+  showReadingTime = true
+  showShareButtons = true
+  showToc = true  # 显示文章目录
+  themeToggle = true  # 开启主题切换（亮/暗模式）
+  favicon = "favicon.ico"  # 设置自定义图标
+  disableBreadcrumb = false  # 显示面包屑导航
+
+
