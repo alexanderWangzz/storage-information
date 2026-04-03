@@ -1,0 +1,31 @@
+/* Custom accents for Alexander's blog */
+:root {
+  --aw-accent: #1d6bcf;
+  --aw-muted: #586178;
+}
+
+body {
+  font-feature-settings: 'liga', 'tnum';
+}
+
+.post-title a,
+.home-info .title,
+body.dark .post-title a {
+  color: var(--aw-accent);
+}
+
+.home-info .content {
+  max-width: 42rem;
+  font-size: 1.05rem;
+  color: var(--aw-muted);
+}
+
+.single .post-content img {
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+blockquote {
+  border-left: 4px solid var(--aw-accent);
+  padding-left: 1rem;
+}

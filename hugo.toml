@@ -1,16 +1,75 @@
 baseURL = 'https://alexanderWangzz.github.io/storage-information/'
-languageCode = 'en-us'
+languageCode = 'zh-cn'
+defaultContentLanguage = 'zh-cn'
 title = "Alexander's Blog"
 theme = 'PaperMod'
+[pagination]
+  pagerSize = 10
+enableRobotsTXT = true
+enableGitInfo = true
+
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+  series = 'series'
+
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
 [params]
   author = "Alexander Wang"
-  description = "A blog about technology, coding, and personal insights."
+  description = "长期记录技术、系统和思考的中文/英文博客。"
+  keywords = ['storage', 'systems', 'notes']
+  DateFormat = '2006-01-02'
+  defaultTheme = 'auto'
   showReadingTime = true
   showShareButtons = true
+  showPostNavLinks = true
   showToc = true  # 显示文章目录
+  tocOpen = true
   themeToggle = true  # 开启主题切换（亮/暗模式）
-  favicon = "favicon.ico"  # 设置自定义图标
+  hideSummary = false
+  disableSpecial1stPost = false
   disableBreadcrumb = false  # 显示面包屑导航
+  favicon = 'favicon.ico'  # 设置自定义图标
+  comments = false
+  assets = { disableHLJS = false }
 
+  [params.homeInfoParams]
+    Title = '你好，我是 Alexander'
+    Content = "这是我沉淀系统、存储和个人思考的地方。文章会以中文为主，也会穿插英文。欢迎订阅 RSS 或通过社交账号联系我。"
 
+  [params.cover]
+    linkFullImages = true
+
+[[params.socialIcons]]
+  name = 'github'
+  url = 'https://github.com/AlexanderWangzz'
+
+[[params.socialIcons]]
+  name = 'email'
+  url = 'mailto:alexander@example.com'
+
+[[params.socialIcons]]
+  name = 'rss'
+  url = '/index.xml'
+
+[[menu.main]]
+  name = '文章'
+  pageRef = 'posts'
+  weight = 10
+
+[[menu.main]]
+  name = '随笔'
+  pageRef = 'notes'
+  weight = 20
+
+[[menu.main]]
+  name = '关于'
+  pageRef = 'about'
+  weight = 30
