@@ -1,4 +1,4 @@
-# thinking
+# Thinking
 
 Hugo + PaperMod 博客，用来记录系统、存储和个人思考。该仓库包含源码，GitHub Pages 通过 Workflow 自动构建并部署。
 
@@ -17,6 +17,6 @@ hugo server -D    # 预览草稿
    - 安装 Hugo（extended）；
    - 执行 `hugo --gc --minify`；
    - 把 `public/` 内容推送到 `gh-pages` 分支。
-3. 首次运行后，等待 GitHub Pages 构建完成，即可通过 `https://alexanderWangzz.github.io/thinking/` 访问（若已在 GitHub 上将仓库重命名为 `thinking`）。
+3. 首次运行后，等待 GitHub Pages 构建完成，即可通过 `https://alexanderWangzz.github.io/Thinking/` 访问（若已在 GitHub 上将仓库重命名为 `Thinking`）。
 
 如需自定义域名，在仓库根目录的 `static/CNAME` 写入域名，并在域名注册商配置 CNAME 解析到 `alexanderWangzz.github.io`。
